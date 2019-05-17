@@ -1,0 +1,31 @@
+<h3>
+  Reactive Form</h3>
+<form [formGroup]="credentials" (ngSubmit)="login()">
+  <div class="form-group">
+    <input type="text" class="form-control" formControlName="login" placeholder="Your Email *" value="" />
+  </div>
+  <div *ngIf="credentials.get('login').invalid">
+    Le login n'est pas bon:
+    <ul>
+      <li *ngIf="credentials.get('login').errors.required">Un email est requis.</li>
+      <li *ngIf="credentials.get('login').errors.email">Ceci n'est pas un email.</li>
+      <li *ngIf="credentials.get('login').errors.notWild">Votre email est de type '{{ credentials.get('login').errors.notWild
+        }}'.</li>
+    </ul>
+  </div>
+  <div class="form-group">
+    <input type="password" class="form-control" formControlName="password" placeholder="Your Password *" value="" />
+  </div>
+  <div *ngIf="credentials.get('password').invalid">
+    Le mot de pass n'est pas bon: {{ credentials.get('password').errors | json }}
+    <ul>
+      <li *ngIf="credentials.get('password').errors.required">Un mot de pass est requis.</li>
+      <li *ngIf="credentials.get('password').errors.minlength">Le mot de pass est de 8 caract mini.</li>
+      <li *ngIf="credentials.get('password').errors.noSpecial">Votre email doit contenir au moins un caractère spécial.</li>
+      <li *ngIf="credentials.get('password').errors.noAlphaNum">Votre email doit contenir au moins un caractère alpha numérique.</li>
+    </ul>
+  </div>
+  <div class="form-group">
+    <input type="submit" class="btnSubmit" value="Login" />
+  </div>
+</form>
