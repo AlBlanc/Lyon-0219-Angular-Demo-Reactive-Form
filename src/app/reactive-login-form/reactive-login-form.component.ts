@@ -3,6 +3,8 @@ import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Credentials } from '../models/credentials';
 import { wildEmailValidator } from '../validators/wildEmail';
 import { wildPasswordValidator } from '../validators/passwordValidator';
+import { AuthService } from '../auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reactive-login-form',
@@ -15,29 +17,25 @@ export class ReactiveLoginFormComponent implements OnInit {
 
   values: Credentials;
 
-  constructor(private fb: FormBuilder) {
-      
+  constructor(private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router) {
+
   }
 
   ngOnInit() {
     this.credentials = this.fb.group({
-      login: ['', [Validators.required, Validators.email, wildEmailValidator]],
-      password: ['' , [Validators.required, wildPasswordValidator, Validators.minLength(8)]]
-    })
-
-    this.credentials.valueChanges.subscribe(credentials => {
-      this.values = credentials
+      login: [''],
+      password: ['']
     })
   }
 
   login() {
 
     this.values = this.credentials.value;
-
-    if (!this.values.login.endsWith('@wild.school')) {
-      alert(`Email invalid ${this.values.login}`)
-    } else {
-      alert(`Je me connecte ${this.values.login} ${this.values.password}`)
-    }
+    this.authService.login(this.values.login, this.values.password).subscribe(user => {
+      console.log(user);
+      this.router.navigate(['/home']);
+    })
   }
 }
